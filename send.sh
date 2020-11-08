@@ -26,10 +26,10 @@ if [ $# -lt 1 ]; then
   echo -e "WARNING!!\nYou need to pass the WEBHOOK_URL environment variable as the second argument to this script.\nFor details & guide, visit: https://github.com/DiscordHooks/travis-ci-discord-webhook" && exit
 fi
 
-AUTHOR_NAME="$(git log -1 "$BUILD_SOURCEVERSION" --pretty="%aN")"
-COMMITTER_NAME="$(git log -1 "$BUILD_SOURCEVERSION" --pretty="%cN")"
-COMMIT_SUBJECT="$(git log -1 "$BUILD_SOURCEVERSION" --pretty="%s")"
-COMMIT_MESSAGE="$(git log -1 "$BUILD_SOURCEVERSIONMESSAGE" --pretty="%b")" | sed -E ':a;N;$!ba;s/\r{0,1}\n/\\n/g'
+AUTHOR_NAME="todo"
+COMMITTER_NAME="todo"
+COMMIT_SUBJECT="todo"
+COMMIT_MESSAGE="$BUILD_SOURCEVERSIONMESSAGE"
 
 if [ ${#COMMIT_SUBJECT} -gt 256 ]; then
   COMMIT_SUBJECT="$(echo "$COMMIT_SUBJECT" | cut -c 1-253)"
