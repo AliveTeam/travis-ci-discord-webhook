@@ -26,10 +26,10 @@ if [ $# -lt 1 ]; then
   echo -e "WARNING!!\nYou need to pass the WEBHOOK_URL environment variable as the second argument to this script.\nFor details & guide, visit: https://github.com/DiscordHooks/travis-ci-discord-webhook" && exit
 fi
 
-AUTHOR_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%aN")"
-COMMITTER_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%cN")"
-COMMIT_SUBJECT="$(git log -1 "$TRAVIS_COMMIT" --pretty="%s")"
-COMMIT_MESSAGE="$(git log -1 "$TRAVIS_COMMIT" --pretty="%b")" | sed -E ':a;N;$!ba;s/\r{0,1}\n/\\n/g'
+AUTHOR_NAME="$(git log -1 "$BUILD_SOURCEVERSION" --pretty="%aN")"
+COMMITTER_NAME="$(git log -1 "$BUILD_SOURCEVERSION" --pretty="%cN")"
+COMMIT_SUBJECT="$(git log -1 "$BUILD_SOURCEVERSION" --pretty="%s")"
+COMMIT_MESSAGE="$(git log -1 "$BUILD_SOURCEVERSIONMESSAGE" --pretty="%b")" | sed -E ':a;N;$!ba;s/\r{0,1}\n/\\n/g'
 
 if [ ${#COMMIT_SUBJECT} -gt 256 ]; then
   COMMIT_SUBJECT="$(echo "$COMMIT_SUBJECT" | cut -c 1-253)"
@@ -47,8 +47,8 @@ else
   CREDITS="$AUTHOR_NAME authored & $COMMITTER_NAME committed"
 fi
 
-if [[ $TRAVIS_PULL_REQUEST != false ]]; then
-  URL="https://github.com/$TRAVIS_REPO_SLUG/pull/$TRAVIS_PULL_REQUEST"
+if [[ $SYSTEM_PULLREQUEST_PULLREQUESTID != false ]]; then
+  URL="https://github.com/$BUILD_REPOSITORY_NAME/pull/$TRAVIS_PULL_REQUEST_SLUG"
 else
   URL=""
 fi
@@ -60,8 +60,8 @@ WEBHOOK_DATA='{
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
-      "name": "Job #'"$TRAVIS_JOB_NUMBER"' (Build #'"$TRAVIS_BUILD_NUMBER"') '"$STATUS_MESSAGE"' - '"$TRAVIS_REPO_SLUG"'",
-      "url": "'"$TRAVIS_BUILD_WEB_URL"'",
+      "name": "Job #'"$BUILD_BUILDID"' (Build #'"$BUILD_BUILDID"') '"$STATUS_MESSAGE"' - '"$BUILD_REPOSITORY_NAME"'",
+      "url": "'"$BUILD_REPOSITORY_NAME"'",
       "icon_url": "'$AVATAR'"
     },
     "title": "'"$COMMIT_SUBJECT"'",
@@ -70,12 +70,12 @@ WEBHOOK_DATA='{
     "fields": [
       {
         "name": "Commit",
-        "value": "'"[\`${TRAVIS_COMMIT:0:7}\`](https://github.com/$TRAVIS_REPO_SLUG/commit/$TRAVIS_COMMIT)"'",
+        "value": "'"[\`${BUILD_SOURCEVERSION:0:7}\`](https://github.com/$BUILD_REPOSITORY_NAME/commit/$BUILD_SOURCEVERSION)"'",
         "inline": true
       },
       {
         "name": "Branch",
-        "value": "'"[\`$TRAVIS_BRANCH\`](https://github.com/$TRAVIS_REPO_SLUG/tree/$TRAVIS_BRANCH)"'",
+        "value": "'"[\`$BUILD_SOURCEBRANCH\`](https://github.com/$BUILD_REPOSITORY_NAME/tree/$BUILD_SOURCEBRANCH)"'",
         "inline": true
       }
     ],
